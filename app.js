@@ -39,7 +39,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use(express.static(path.join(__dirname, 'public/robotweb')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function(req, res, next){
     res.set('Access-Control-Allow-Origin','*');

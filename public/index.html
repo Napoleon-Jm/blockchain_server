@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Demo</title>
+</head>
+<body>
+
+<div id="root">
+    <form>
+        Username: <input id="username" type="text" name="usn">
+        Password: <input id="password" type="password" name="pwd">
+    </form>
+    <button type="button" onclick="register_fun()">register</button>
+    <button type="button" onclick="login_fun()">login</button>
+</div>
+
+<!-- java script -->
+<script src="./jquery.min.js"></script>
+<script>
+    function register_fun(){
+        var postBody = {
+            username: $('#username').val(),
+            password: $('#password').val()
+        };
+        console.log(postBody.username + " " + postBody.password);
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:3000/users/register',
+            data: postBody,
+            dataType: 'json',
+            success: function(data){
+                alert(data.status);
+            }
+        }).error(function(err){
+            console.log(err);
+            alert(err.responseText);
+        });
+        console.log('register_fun');
+    }
+    function login_fun(){
+        var postBody = {
+            username: $('#username').val(),
+            password: $('#password').val()
+        };
+        console.log(postBody.username + " " + postBody.password);
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:3000/users/login',
+            data: postBody,
+            dataType: 'json',
+            success: function(data){
+                alert(data.status);
+            }
+        }).error(function(err){
+            console.log(err);
+            alert(err.responseText);
+        });
+        console.log('register_fun');
+    }
+</script>
+</body>
+</html>

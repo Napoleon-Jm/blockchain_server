@@ -3,6 +3,10 @@ var router = express.Router();
 var passport = require('passport');
 var User = require('../model/user');
 var Verify    = require('./verify');
+var mongoose = require('mongoose');
+var config = require('../config');
+var db = require('../model/datebase');
+var CoreDataModel = require('../model/coredatamodel');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -43,14 +47,22 @@ router.post('/login', function(req, res, next) {
                 });
             }
 
-            var token = Verify.getToken(user);
-            // res.set('Access-Control-Allow-Origin','*');
-            res.status(200).json({
-                username: user.username,
-                status: 'Login successful!',
-                success: true,
-                token: token
+            console.log(user);
+
+            CoreDataModel.find({'patientId': user.username}, function (err, docs) {
+                console.log(docs);
+                var token = Verify.getToken(user);
+                // res.set('Access-Control-Allow-Origin','*');
+                res.status(200).json({
+                    username: user.username,
+                    status: 'Login successful!',
+                    data: docs,
+                    success: true,
+                    token: token
+                });
             });
+
+
         });
     })(req,res,next);
 });

@@ -8,4 +8,7 @@ module.exports = {
 
     'contractName': "8111c28c38397f663df4201e174987333f8cc13df72abb4cfc57c7d8be3b6" +
     "f5a9336887575db315503a98b0cabad29ab4cf696ba96f10fae2003037dbca94d50",
+    'host': '115.159.22.238',
+    'port': 7050,
+    'path': '/chaincode'
 };

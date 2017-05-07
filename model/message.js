@@ -21,6 +21,75 @@ var BCMessageObj = function(){
     }
 };
 
+// 在区块链上增加病历存储位置信息。或
+// 在区块链上增加病历查看记录的信息。
+/**
+ *
+ * @param args 增加的病历编号| 病历在数据库中的位置 | 病历hash指纹 |病历疾病类型 或
+ * 查看请求编号| 请求发起者编号| 医院编号 | 医院授权情况 |病人编号 |病人授权情况
+ * @returns {BCMessageObj}
+ * @constructor
+ */
+function BCMessageAdd (args) {
+    var msg = new BCMessageObj();
+    msg.method = "invoke";
+    msg.params.ctorMsg.function = "add";
+    msg.params.ctorMsg.args = args;
+    return msg;
+}
+
+// 在区块链上查询病历存储位置信息。
+/**
+ *
+ * @param args 病历编号
+ * @returns {BCMessageObj}
+ * @constructor
+ */
+function BCMessageQuery(args){
+    var msg = new BCMessageObj();
+    msg.method = "query";
+    msg.params.ctorMsg.function = "query";
+    msg.params.args = args;
+    return msg;
+}
+
+// 在区块链上查询申请记录的信息。
+/**
+ *
+ * @param args 查看请求编号
+ * @returns {BCMessageObj}
+ * @constructor
+ */
+function BCMessageQueryApplicationLog(args){
+    var msg = new BCMessageObj();
+    msg.method = "query";
+    msg.params.ctorMsg.function = "test";
+    msg.params.args = args;
+    return msg;
+}
+
+// 授权信息
+/**
+ *
+ * @param args 病人/医院编号| 病人/医院授权码
+ * @constructor
+ */
+function BCMessageVerifyAdd(args) {
+    var msg = new BCMessageAdd();
+
+}
+/**
+ *
+ * @param args 医院编号| 医院授权码| 病人编号|病人授权码
+ * @constructor
+ */
+function BCMessageVerify(args){
+    var msg = new BCMessageObj();
+    msg.method = "query";
+    msg.params.ctorMsg.function = "verify";
+    msg.params.ctorMsg.args = args;
+}
+
 function BCMessage(jsonrpc, method, params, id) {
     this.jsonrpc = jsonrpc;
     this.method = method;
@@ -79,3 +148,8 @@ exports.CtorMsg = CtorMsg;
 exports.ChaincodeId = ChaincodeId;
 exports.Params = Params;
 exports.BCMessageObj = BCMessageObj;
+exports.BCMessageAdd = BCMessageAdd;
+exports.BCMessageQuery = BCMessageQuery;
+exports.BCMessageQueryApplicationLog = BCMessageQueryApplicationLog;
+exports.BCMessageVerifyAdd = BCMessageVerifyAdd;
+exports.BCMessageVerify = BCMessageVerify;

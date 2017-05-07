@@ -8,22 +8,35 @@ var CoreData = require('../model/coredatamodel');
 var assert = require('assert');
 
 /**
+ * 查询病历
+ * reason
+ */
+
+router.post('/third/query/data', function (req, res, next) {
+    CoreData.find({'reason': req.body.reason}, function (err, docs) {
+        res.json(docs);
+    })
+});
+
+/**
  * 增加申请单。
  */
 
 router.post('/third/app', function (req, res, next) {
-   var app = new LocalModel({
-       applicantId: String,
-       patientId: String,
-       patientAgree: String,
-       hostpitalId: String,
-       hostpitalAgree: String,
-       reason: String,
-   });
-   app.save(function (err) {
+    var body = req.body;
+    var app = new LocalModel({
+       applicationId: body.applicationId,
+       patientId: body.patientId,
+       patientAgree: '3',
+       hospitalId: body.hospitalId,
+       hospitalAgree: '3',
+       reason: body.reason
+    });
+   app.save(function (err, result) {
        assert.equal(err, null);
        console.log("coredata 1 saved");
-       res.json()
+       console.log(result);
+       res.json(result);
    })
 });
 
@@ -32,7 +45,7 @@ router.post('/third/app', function (req, res, next) {
  * patientId
  */
 router.post('/patient/query', function(req, res, next) {
-    LocalModel.find({"patientId": req.body.patientId, "hospitalIAgree": "1"}, function (err, docs) {
+    LocalModel.find({"patientId": req.body.patientId, "hospitalAgree": "1"}, function (err, docs) {
         res.json(docs);
     });
 });
@@ -42,7 +55,7 @@ router.post('/patient/query', function(req, res, next) {
  * hospitalId
  */
 router.post('/hospital/query', function (req, res, next) {
-    LocalModel.find({"hospitalId": req.body.hospitalId}, function (err, docs) {
+    LocalModel.find({"hospitalId": req.body.hospitalId, "hospitalAgree": "3"}, function (err, docs) {
         res.json(docs);
     })
 });
@@ -74,15 +87,17 @@ router.post('/third/query/check', function (req, res, next) {
  * id, patientId, agree
  */
 router.post('/patient/verify', function(req, res, next) {
-    LocalModel.findOne({"patientId": req.body.patientId, "_id": req.body.id}, function(err, doc){
-        // 更新doc的agree状态。
-    })
+    LocalModel.findByIdAndUpdate(req.body._id, {$set:{patientAgree: req.body.agree}},function(err,doc){
+        console.log(doc); //MDragon
+        res.json(doc);
+    });
 });
 
-router.post('/hostipal/verify', function (req, res, next) {
-    LocalModel.findOne({"hospitalId": req.body.hospitalId, "_id": req.body.id}, function(err, doc){
-        // 更新doc的agree状态。
-    })
+router.post('/hospital/verify', function (req, res, next) {
+    LocalModel.findByIdAndUpdate(req.body._id, {$set:{hospitalAgree: req.body.agree}},function(err,doc){
+        console.log(doc); //MDragon
+        res.json(doc);
+    });
 });
 
 module.exports = router;

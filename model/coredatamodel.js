@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 
 var CoreDataModel = new Schema({
     patientId: String,
-    hostpitalId: String,
+    hospitalId: String,
     reason: String,
     content: String,
     date: String,

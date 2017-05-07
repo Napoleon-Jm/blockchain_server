@@ -14,11 +14,11 @@ var Schema = mongoose.Schema;
  */
 
 var LocalApplicationModel = new Schema({
-    applicantId: String,
+    applicationId: String,
     patientId: String,
     patientAgree: String,
-    hostpitalId: String,
-    hostpitalAgree: String,
+    hospitalId: String,
+    hospitalAgree: String,
     reason: String,
     admin: {
         type: Boolean,

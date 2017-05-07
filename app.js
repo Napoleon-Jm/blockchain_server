@@ -31,21 +31,21 @@ db.once('open',function () {
     /************* 病历信息 ***************/
     var coreData1 = new CoreDataModel({
         patientId: 1001,
-        hostpitalId: 2001,
+        hospitalId: 2001,
         date: "2001",
         reason: "heart",
         content: "heart content",
     });
     var coreData2 = new CoreDataModel({
         patientId: 1002,
-        hostpitalId: 2002,
+        hospitalId: 2002,
         reason: "cold",
         date: '2006',
         content: "cold content",
     });
     var coreData3 = new CoreDataModel({
         patientId: 1003,
-        hostpitalId: 2002,
+        hospitalId: 2002,
         date: "2003",
         reason: "heart",
         content: "heart content",
@@ -73,6 +73,7 @@ db.once('open',function () {
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var test = require('./routes/test');
+var check = require('./routes/check');
 
 var app = express();
 
@@ -105,6 +106,7 @@ app.use(function(req, res, next){
 app.use('/', routes);
 app.use('/users', users);
 app.use('/test', test);
+app.use('/check', check);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -11,6 +11,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var CoreDataModel = require('./model/coredatamodel');
 var assert = require('assert');
 var db = require('./model/datebase');
+var LocalModel = require('./model/localapplicationmodel');
 
 // database connection.
 // mongoose.connect(config.mongoUrl);
@@ -18,9 +19,16 @@ var db = require('./model/datebase');
 db.on('error',console.error.bind(console, 'connection error: '));
 db.once('open',function () {
     console.log('Mongoose Server connected.');
+    //初始化先删除所有本地申请信息和病历信息。
     CoreDataModel.remove({}, function (err) {
         
     });
+    LocalModel.remove({}, function (err) {
+
+    });
+    //初始化本地申请信息和病历信息。
+
+    /************* 病历信息 ***************/
     var coreData1 = new CoreDataModel({
         patientId: 1001,
         hostpitalId: 2001,
@@ -55,6 +63,10 @@ db.once('open',function () {
         assert.equal(err, null);
         console.log("coredata 3 saved");
     });
+
+    /***************** 本地申请信息 ******************/
+
+    var app
 
 });
 // routers.

@@ -49,7 +49,7 @@ router.post('/login', function(req, res, next) {
 
             console.log(user);
 
-            CoreDataModel.find({'patientId': user.username}, function (err, docs) {
+            CoreDataModel.find({'patientId': user.username}, ['patientId', 'reason', 'hospitalId', 'date'], function (err, docs) {
                 console.log(docs);
                 var token = Verify.getToken(user);
                 // res.set('Access-Control-Allow-Origin','*');

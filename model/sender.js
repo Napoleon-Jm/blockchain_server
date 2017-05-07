@@ -17,7 +17,7 @@ function Poster(reqData, callback){
             "Content-Type": 'application/json',
             'Content-Length':Buffer.byteLength(postData)
         }
-    }
+    };
     var req=http.request(options, function(res) {
         console.log('Status:',res.statusCode);
         console.log('headers:',JSON.stringify(res.headers));

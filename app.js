@@ -12,6 +12,7 @@ var CoreDataModel = require('./model/coredatamodel');
 var assert = require('assert');
 var db = require('./model/datebase');
 var LocalModel = require('./model/localapplicationmodel');
+var BC = require('./blockchain/bcoperation');
 
 // database connection.
 // mongoose.connect(config.mongoUrl);
@@ -51,23 +52,67 @@ db.once('open',function () {
         content: "heart content",
     });
 
-    coreData1.save(function(err){
+    coreData1.save(function(err, result){
         assert.equal(err, null);
         console.log("coredata 1 saved");
+        console.log(result._id);
+        // 本地数据上传区块链
+        BC.addCoreData({
+            "id": result._id,
+            "position": result.hospitalId,
+            "hash": result._id,
+            "category": result.reason
+        }, function (err, response) {
+            if(err == null){
+                console.log("save in block");
+                console.log(response);
+            } else {
+                console.log("error-------");
+                console.log(err);
+            }
+        })
     });
-    coreData2.save(function(err){
+    coreData2.save(function(err, result){
         assert.equal(err, null);
         console.log("coredata 2 saved");
+        console.log(result._id);
+        // 本地数据上传区块链
+        BC.addCoreData({
+            "id": result._id,
+            "position": result.hospitalId,
+            "hash": result._id,
+            "category": result.reason
+        }, function (err, response) {
+            if(err == null){
+                console.log("save in block");
+                console.log(response);
+            } else {
+                console.log("error-------");
+                console.log(err);
+            }
+        })
     });
-    coreData3.save(function(err){
+    coreData3.save(function(err, result){
         assert.equal(err, null);
         console.log("coredata 3 saved");
+        // 本地病历上传区块链
+        console.log(result._id);
+        BC.addCoreData({
+            "id": result._id,
+            "position": result.hospitalId,
+            "hash": result._id,
+            "category": result.reason
+        }, function (err, response) {
+            if(err == null){
+                console.log("save in block");
+                console.log(response);
+            } else {
+                console.log("error-------");
+                console.log(err);
+            }
+        })
     });
-
     /***************** 本地申请信息 ******************/
-
-    var app
-
 });
 // routers.
 var routes = require('./routes/index');

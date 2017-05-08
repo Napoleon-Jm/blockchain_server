@@ -80,10 +80,11 @@ router.post('/query/data', function(req, res, next){
 /**
  * 查看请求编号| 请求发起者编号| 医院编号 | 医院授权情况 |病人编号 |病人授权情况
  */
-router.post('add/datalog', function (req, res, next) {
+router.post('/add/datalog', function (req, res, next) {
     var body = req. body;
-    var msg = new BCMessageAdd([req.logId, req.applicationId, req.hospitalId, req.hospitalVerify, req.patientId, req.patientVerify]);
+    var msg = new BCMessageAdd([req.logId, req.applicationId, req.hospitalId, req.hospitalAgree, req.patientId, req.patientAgree]);
     msg.params.chaincodeID.name = contract.lookUpName;
+    console.log(msg);
     poster = new Poster(msg, function (err, resdata) {
         if(err != null){
             console.log('err');

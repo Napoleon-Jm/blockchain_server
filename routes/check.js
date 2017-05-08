@@ -6,6 +6,7 @@ var router = express.Router();
 var LocalModel = require('../model/localapplicationmodel');
 var CoreData = require('../model/coredatamodel');
 var assert = require('assert');
+var BC = require('../blockchain/bcoperation');
 
 /**
  * 查询病历
@@ -32,12 +33,24 @@ router.post('/third/app', function (req, res, next) {
        hospitalAgree: '3',
        reason: body.reason
     });
-   app.save(function (err, result) {
+    app.save(function (err, result) {
        assert.equal(err, null);
-       console.log("coredata 1 saved");
+       console.log("local data 1 saved");
        console.log(result);
+        BC.addApplicationLog({
+            "logId": result._id,
+            "applicationId": result.applicationId,
+            "hospitalId": result.hospitalId,
+            "hospitalAgree": result.hospitalAgree,
+            "patientId": result.patientId,
+            "patientAgree": result.patientAgree
+        }, function (err, r) {
+            if(err == null){
+                console.log("Add application log to block chain success!");
+            }
+        });
        res.json(result);
-   })
+    });
 });
 
 /**
@@ -76,9 +89,12 @@ router.post('/third/query', function (req, res, next) {
 router.post('/third/query/check', function (req, res, next) {
     LocalModel.findOne({"applicationID": req.body.applicationID, "patientAgree": "1", "hospitalAgree": "1"}, function (err, doc) {
         // res.json(docs);
+        BC.queryCoreData({id : doc._id}, function (err, result) {
+            console.log("query to log");
+        });
         CoreData.findOne({"patientId": doc.patientId}, function (err, doc) {
             res.json(doc);
-        })
+        });
     })
 });
 

@@ -2,7 +2,6 @@
  * Created by jimin on 17/5/3.
  */
 var http=require('http');
-var querystring=require('querystring');
 var config = require('../config');
 //发送 http Post 请求
 
@@ -20,15 +19,13 @@ function Poster(reqData, callback){
     };
     var req=http.request(options, function(res) {
         console.log('Status:',res.statusCode);
-        console.log('headers:',JSON.stringify(res.headers));
+        // console.log('headers:',JSON.stringify(res.headers));
         res.setEncoding('utf-8');
         res.on('data',function(chun){
-            console.log('body分隔线---------------------------------\r\n');
-            // console.info(chun);
             callback(null, chun);
         });
         res.on('end',function(){
-            console.log('No more data in response.********');
+            // console.log('No more data in response.********');
         });
     });
     req.on('error',function(err){

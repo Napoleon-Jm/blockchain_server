@@ -12,7 +12,7 @@ var Schema = mongoose.Schema;
  * 病人ID规约用1开头
  * 医院ID规约用2开头
  */
-
+// _id 就是申请单编号。
 var LocalApplicationModel = new Schema({
     applicationId: String,
     patientId: String,

@@ -49,7 +49,7 @@ function BCMessageQuery(args){
     var msg = new BCMessageObj();
     msg.method = "query";
     msg.params.ctorMsg.function = "query";
-    msg.params.args = args;
+    msg.params.ctorMsg.args = args;
     return msg;
 }
 

@@ -4,6 +4,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+/*
+* _id 就是病历编号*/
 var CoreDataModel = new Schema({
     patientId: String,
     hospitalId: String,

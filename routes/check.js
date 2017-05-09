@@ -89,8 +89,11 @@ router.post('/third/query', function (req, res, next) {
 router.post('/third/query/check', function (req, res, next) {
     LocalModel.findOne({"applicationID": req.body.applicationID, "patientAgree": "1", "hospitalAgree": "1"}, function (err, doc) {
         // res.json(docs);
+        BC.verify({patientId: doc.patientId, patientAgree: doc.patientId, hospitalId: doc.hospitalId, hospitalAgree: doc.hospitalAgree}, function (err, result) {
+            console.log(" verify on bc")
+        });
         BC.queryCoreData({id : doc._id}, function (err, result) {
-            console.log("query to log");
+            console.log("query data position on bc");
         });
         CoreData.findOne({"patientId": doc.patientId}, function (err, doc) {
             res.json(doc);

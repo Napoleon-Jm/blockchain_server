@@ -4,6 +4,7 @@
 var Poster = require("../model/sender");
 var contract = require("../contract");
 var BCMessageAdd = require('../model/message').BCMessageAdd;
+var BCMessageQuery = require('../model/message').BCMessageQuery;
 /**
  * 向区块链中加入病历信息。
  *
@@ -28,7 +29,11 @@ function addCoreData(data, callback) {
         callback(null, resdata);
     })
 }
-
+/**
+ * 查看文档位置
+ * @param data
+ * @param callback
+ */
 function queryCoreData(data, callback){
     var body = data;
     var msg = new BCMessageQuery([body.id]);
@@ -42,7 +47,11 @@ function queryCoreData(data, callback){
         callback(null, resdata);
     })
 }
-
+/**
+ * 增加申请单的记录
+ * @param data
+ * @param callback
+ */
 function addApplicationLog(data, callback){
     var body = data;
     var msg = new BCMessageAdd([body.logId,
@@ -62,8 +71,29 @@ function addApplicationLog(data, callback){
     })
 }
 
+/**
+ * 验证授权码
+ * @param args 医院编号| 医院授权码| 病人编号|病人授权码
+ * @constructor
+ */
+function verify(data, callback) {
+    var body = data;
+    var msg = new BCMessageVerifyAdd([body.hospitalId, body.hospitalAgree, body.patientId, body.patientAgree]);
+    msg.params.chaincodeID.name = contract.verify;
+    poster = new Poster(msg, function (err, resdata) {
+        if(err != null){
+            console.log('err');
+            callback(err, null);
+        }
+        callback(null, resdata);
+    })
+}
+
+
+
 module.exports = {
     addCoreData: addCoreData,
     queryCoreData: queryCoreData,
-    addApplicationLog: addApplicationLog
+    addApplicationLog: addApplicationLog,
+    verify: verify
 };

@@ -26,12 +26,13 @@ router.post('/third/query/data', function (req, res, next) {
 router.post('/third/app', function (req, res, next) {
     var body = req.body;
     var app = new LocalModel({
-       applicationId: body.applicationId,
-       patientId: body.patientId,
-       patientAgree: '3',
-       hospitalId: body.hospitalId,
-       hospitalAgree: '3',
-       reason: body.reason
+        coreDataId: body.coreDataId,
+        applicationId: body.applicationId,
+        patientId: body.patientId,
+        patientAgree: '3',
+        hospitalId: body.hospitalId,
+        hospitalAgree: '3',
+        reason: body.reason
     });
     app.save(function (err, result) {
        assert.equal(err, null);
@@ -85,20 +86,30 @@ router.post('/third/query', function (req, res, next) {
 
 /**
  * 第三方查看文档。
+ * _id
  */
 router.post('/third/query/check', function (req, res, next) {
-    LocalModel.findOne({"applicationID": req.body.applicationID, "patientAgree": "1", "hospitalAgree": "1"}, function (err, doc) {
+    LocalModel.findOne({"_id": req.body._id, "applicationID": req.body.applicationID, "patientAgree": "1", "hospitalAgree": "1"}, function (err, doc) {
         // res.json(docs);
-        BC.verify({patientId: doc.patientId, patientAgree: doc.patientId, hospitalId: doc.hospitalId, hospitalAgree: doc.hospitalAgree}, function (err, result) {
-            console.log(" verify on bc")
-        });
-        BC.queryCoreData({id : doc._id}, function (err, result) {
-            console.log("query data position on bc");
-        });
-        CoreData.findOne({"patientId": doc.patientId}, function (err, doc) {
-            res.json(doc);
-        });
-    })
+        if(err != null){
+            res.json(err);
+        }
+        if(doc != null){
+            console.log("application info ------------------ ");
+            console.log(JSON.stringify(doc));
+            BC.verify({"patientId": doc.patientId, "patientAgree": doc.patientId, "hospitalId": doc.hospitalId, "hospitalAgree": doc.hospitalAgree}, function (err, result) {
+                console.log(" verify on bc")
+            });
+            BC.queryCoreData({"id" : doc.coreDataId}, function (err, result) {
+                console.log("query data position on bc");
+            });
+            CoreData.findOne({"_id": doc.coreDataId, "patientId": doc.patientId}, function (err, doc) {
+                res.json(doc);
+            });
+        } else {
+            res.json({result: "no data"});
+        }
+    });
 });
 
 /**

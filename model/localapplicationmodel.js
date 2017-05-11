@@ -14,6 +14,7 @@ var Schema = mongoose.Schema;
  */
 // _id 就是申请单编号。
 var LocalApplicationModel = new Schema({
+    coreDataId: String,
     applicationId: String,
     patientId: String,
     patientAgree: String,

@@ -22,7 +22,7 @@ db.once('open',function () {
     console.log('Mongoose Server connected.');
     //初始化先删除所有本地申请信息和病历信息。
     CoreDataModel.remove({}, function (err) {
-        
+
     });
     LocalModel.remove({}, function (err) {
 

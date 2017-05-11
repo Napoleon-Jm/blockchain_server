@@ -5,6 +5,7 @@ var Poster = require("../model/sender");
 var contract = require("../contract");
 var BCMessageAdd = require('../model/message').BCMessageAdd;
 var BCMessageQuery = require('../model/message').BCMessageQuery;
+var BCMessageVerifyAdd = require('../model/message').BCMessageVerifyAdd;
 /**
  * 向区块链中加入病历信息。
  *

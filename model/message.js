@@ -76,7 +76,7 @@ function BCMessageQueryApplicationLog(args){
  */
 function BCMessageVerifyAdd(args) {
     var msg = new BCMessageAdd();
-
+    return msg;
 }
 /**
  *

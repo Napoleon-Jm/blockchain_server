@@ -73,6 +73,24 @@ function addApplicationLog(data, callback){
 }
 
 /**
+ * 增加授权码。
+ * @param data 病人/医院编号| 病人/医院授权码
+ * @param callback
+ */
+function addVerifyCode(data, callback) {
+    var body = data;
+    var msg = new BCMessageAdd([body.id, body.verifyCode]);
+    msg.params.chaincodeID.name = contract.verify;
+    poster = new Poster(msg, function (err, resdata) {
+        if(err != null){
+            console.log('err');
+            callback(err, null);
+        }
+        callback(null, resdata);
+    });
+}
+
+/**
  * 验证授权码
  * @param args 医院编号| 医院授权码| 病人编号|病人授权码
  * @constructor
@@ -90,11 +108,10 @@ function verify(data, callback) {
     })
 }
 
-
-
 module.exports = {
     addCoreData: addCoreData,
     queryCoreData: queryCoreData,
     addApplicationLog: addApplicationLog,
-    verify: verify
+    verify: verify,
+    addVerifyCode: addVerifyCode
 };

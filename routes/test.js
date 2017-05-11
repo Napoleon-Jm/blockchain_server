@@ -10,6 +10,7 @@ var BCMessageVerify = require('../model/message').BCMessageVerify;
 var contract = require('../contract');
 var config = require('../config');
 var Poster = require('../model/sender');
+var BC = require('../blockchain/bcoperation');
 
 /********************* 下面所有的请求都是 nodejs server 对区块链的请求 *********************/
 /********************* 下面所有的请求都是 nodejs server 对区块链的请求 *********************/
@@ -126,22 +127,17 @@ router.post('query/datalog', function (req, res, next) {
  */
 
 router.post('add/verify', function (req, res, next) {
-    var body = req.body;
-    var args;
-    if(body.patientId != undefined){
-        args = [body.patientId, body.patientVerify];
-    } else {
-        args = [body.hospitalId, body.hospitalVerify];
-    }
-    var msg = new BCMessageVerifyAdd(args);
-    msg.params.chaincodeID.name = contract.verify;
-    poster = new Poster(msg, function (err, resdata) {
-        if(err != null){
-            console.log('err');
-        }
-        console.log(resdata);
-        res.json(resdata);
-    })
+    // BC.addVerifyCode({"id":req.body.id, "verifyCode":req.body.code}, function (err, data) {
+    //     res.json(data);
+    // });
+    res.json("test");
+});
+
+router.post('/test', function (req, res, next) {
+    // res.json("test");
+    BC.addVerifyCode({"id":req.body.id, "verifyCode":req.body.code}, function (err, data) {
+        res.json(data);
+    });
 });
 
 /**

@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var config = require('../config');
 var db = require('../model/datebase');
 var CoreDataModel = require('../model/coredatamodel');
+var BC = require('../blockchain/bcoperation');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -52,6 +53,12 @@ router.post('/login', function(req, res, next) {
             CoreDataModel.find({'patientId': user.username}, ['patientId', 'reason', 'hospitalId', 'date'], function (err, docs) {
                 console.log(docs);
                 var token = Verify.getToken(user);
+
+                BC.addVerifyCode({"id":user.username, "verifyCode":token}, function (err, data) {
+                    console.log("add verify success" + " : " + user.username);
+                    console.log(data);
+                });
+
                 // res.set('Access-Control-Allow-Origin','*');
                 res.status(200).json({
                     username: user.username,

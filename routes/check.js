@@ -59,7 +59,7 @@ router.post('/third/app', function (req, res, next) {
  * patientId
  */
 router.post('/patient/query', function(req, res, next) {
-    LocalModel.find({"patientId": req.body.patientId, "hospitalAgree": "1"}, function (err, docs) {
+    LocalModel.find({"patientId": req.body.patientId}, function (err, docs) {
         res.json(docs);
     });
 });
@@ -69,7 +69,7 @@ router.post('/patient/query', function(req, res, next) {
  * hospitalId
  */
 router.post('/hospital/query', function (req, res, next) {
-    LocalModel.find({"hospitalId": req.body.hospitalId, "hospitalAgree": "3"}, function (err, docs) {
+    LocalModel.find({"hospitalId": req.body.hospitalId}, function (err, docs) {
         res.json(docs);
     })
 });

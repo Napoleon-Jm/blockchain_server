@@ -108,19 +108,27 @@ router.post('/third/query/check', function (req, res, next) {
             });
             // patient + 100
             VerifyCode.findOne({"username": doc.patientId}, function (err, ver) {
-                VerifyCode.update({"username": doc.patientId}, {$set: {"balance": ver.balance + 100}}, function (err, up) {
-                    if(err == null){
-                        console.log("/**************** patient + 100 *******************/");
-                    }
-                })
+                if(ver != null && ver.balance != null){
+                    VerifyCode.update({"username": doc.patientId}, {$set: {"balance": ver.balance + 100}}, function (err, up) {
+                        if(err == null){
+                            console.log("/**************** patient + 100 *******************/");
+                        }
+                    });
+                } else {
+                    console.log("app balance is null");
+                }
             });
             // patient - 100
             VerifyCode.findOne({"username": doc.applicationId}, function (err, ver) {
-                VerifyCode.update({"username": doc.applicationId}, {$set: {"balance": ver.balance - 100}}, function (err, up) {
-                    if(err == null){
-                        console.log("/**************** applicationId - 100 *******************/");
-                    }
-                })
+                if(ver != null && ver.balance != null){
+                    VerifyCode.update({"username": doc.applicationId}, {$set: {"balance": ver.balance - 100}}, function (err, up) {
+                        if(err == null){
+                            console.log("/**************** applicationId - 100 *******************/");
+                        }
+                    })
+                } else {
+                    console.log("app balance is null");
+                }
             });
             CoreData.findOne({"_id": doc.coreDataId, "patientId": doc.patientId}, function (err, core) {
                 res.json(core);

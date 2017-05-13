@@ -8,6 +8,7 @@ var config = require('../config');
 var db = require('../model/datebase');
 var CoreDataModel = require('../model/coredatamodel');
 var BC = require('../blockchain/bcoperation');
+var VerifyCode = require('../model/verifycode');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -17,9 +18,7 @@ router.get('/', function(req, res, next) {
 router.post('/register', function(req, res) {
     console.log("username: " + req.body.username);
     User.register(new User({ username : req.body.username,
-            role: req.body.role,
-            verifyCode: req.body.verifyCode,
-            balance: req.body.balance}),
+            role: req.body.role}),
         req.body.password, function(err, user) {
             if (err) {
                 res.set('Access-Control-Allow-Origin','*');
@@ -27,6 +26,22 @@ router.post('/register', function(req, res) {
             }
             passport.authenticate('local')(req, res, function () {
                 res.set('Access-Control-Allow-Origin','*');
+                var code = new VerifyCode({
+                    username: req.body.username,
+                    verifyCode: req.body.verifyCode,
+                    balance: req.body.balance
+                });
+                code.save(function (err, doc) {
+                    if(err != null){
+                        console.log("save verify code failed");
+                    }
+                    console.log("/**************** save verifyCode *******************");
+                    console.log(doc);
+                });
+                BC.addVerifyCode({"id":req.body.username, "verifyCode":req.body.verifyCode}, function (err, data) {
+                    console.log("BC_OPERATION: " + "add verify success" + " : " + req.body.username);
+                    console.log(data);
+                });
                 return res.status(200).json({status: 'Registration Successful!'});
             });
         });
@@ -55,29 +70,42 @@ router.post('/login', function(req, res, next) {
 
             CoreDataModel.find({'patientId': user.username}, ['patientId', 'reason', 'hospitalId', 'date'], function (err, docs) {
                 console.log(docs);
-                var token = Verify.getToken(user);
-
-                BC.addVerifyCode({"id":user.username, "verifyCode":user.verifyCode}, function (err, data) {
-                    console.log("add verify success" + " : " + user.username);
-                    console.log(data);
-                });
-
                 // res.set('Access-Control-Allow-Origin','*');
-                res.status(200).json({
-                    username: user.username,
-                    role: user.role,
-                    status: 'Login successful!',
-                    balance: user.balance,
-                    verifyCode: user.verifyCode,
-                    data: docs,
-                    success: true,
-                    token: token
+                VerifyCode.findOne({"username": user.username},function (err, doc) {
+                    res.status(200).json({
+                        id: user._id,
+                        username: user.username,
+                        role: user.role,
+                        status: 'Login successful!',
+                        data: docs,
+                        verifyCode: doc.verifyCode,
+                        balance: doc.balance,
+                        success: true
+                    });
                 });
             });
-
-
         });
     })(req,res,next);
+});
+
+router.post('/changeverifycode', function (req, res, next) {
+   VerifyCode.update({username: req.body.username}, {$set: {verifyCode: req.body.verifyCode}}, function (err, doc) {
+       if(err == null){
+           console.log(doc);
+           BC.addVerifyCode({"id":req.body.username, "verifyCode":req.body.verifyCode}, function (err, data) {
+               console.log("BC_OPERATION: " + "add verify success" + " : " + req.body.username);
+               console.log(data);
+           });
+       }
+       res.json(doc);
+   }) 
+});
+
+router.post('/getverifycode', function (req, res, next) {
+    VerifyCode.findOne({"username": req.body.username}, function (err, doc) {
+        if(err == null)
+            res.json(doc);
+    })
 });
 
 router.get('/logout', function(req, res) {

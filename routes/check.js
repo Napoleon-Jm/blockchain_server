@@ -100,9 +100,10 @@ router.post('/third/query/check', function (req, res, next) {
         if(doc != null){
             console.log("application info ------------------ ");
             console.log(JSON.stringify(doc));
-            BC.verify({"patientId": doc.patientId, "patientAgree": doc.patientVerifyCode, "hospitalId": doc.hospitalId, "hospitalAgree": doc.hospitalVerifyCode}, function (err, result) {
-                console.log(" verify on bc")
-            });
+            // 第三方查看病历不需要走区块链了。。。
+            // BC.verify({"patientId": doc.patientId, "patientAgree": doc.patientVerifyCode, "hospitalId": doc.hospitalId, "hospitalAgree": doc.hospitalVerifyCode}, function (err, result) {
+            //     console.log(" verify on bc")
+            // });
             BC.queryCoreData({"id" : doc.coreDataId}, function (err, result) {
                 console.log("query data position on bc");
             });

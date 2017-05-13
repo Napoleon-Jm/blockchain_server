@@ -16,7 +16,10 @@ router.get('/', function(req, res, next) {
 
 router.post('/register', function(req, res) {
     console.log("username: " + req.body.username);
-    User.register(new User({ username : req.body.username, role: req.body.role }),
+    User.register(new User({ username : req.body.username,
+            role: req.body.role,
+            verifyCode: req.body.verifyCode,
+            balance: req.body.balance}),
         req.body.password, function(err, user) {
             if (err) {
                 res.set('Access-Control-Allow-Origin','*');
@@ -64,6 +67,8 @@ router.post('/login', function(req, res, next) {
                     username: user.username,
                     role: user.role,
                     status: 'Login successful!',
+                    balance: user.balance,
+                    verifyCode: user.verifyCode,
                     data: docs,
                     success: true,
                     token: token

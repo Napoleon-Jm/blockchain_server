@@ -7,6 +7,7 @@ var LocalModel = require('../model/localapplicationmodel');
 var CoreData = require('../model/coredatamodel');
 var assert = require('assert');
 var BC = require('../blockchain/bcoperation');
+var VerifyCode = require('../model/verifycode');
 
 /**
  * 查询病历
@@ -105,8 +106,24 @@ router.post('/third/query/check', function (req, res, next) {
             BC.queryCoreData({"id" : doc.coreDataId}, function (err, result) {
                 console.log("query data position on bc");
             });
-            CoreData.findOne({"_id": doc.coreDataId, "patientId": doc.patientId}, function (err, doc) {
-                res.json(doc);
+            // patient + 100
+            VerifyCode.findOne({"username": doc.patientId}, function (err, ver) {
+                VerifyCode.update({"username": doc.patientId}, {$set: {"balance": ver.balance + 100}}, function (err, up) {
+                    if(err == null){
+                        console.log("/**************** patient + 100 *******************/");
+                    }
+                })
+            });
+            // patient - 100
+            VerifyCode.findOne({"username": doc.applicationId}, function (err, ver) {
+                VerifyCode.update({"username": doc.applicationId}, {$set: {"balance": ver.balance - 100}}, function (err, up) {
+                    if(err == null){
+                        console.log("/**************** applicationId - 100 *******************/");
+                    }
+                })
+            });
+            CoreData.findOne({"_id": doc.coreDataId, "patientId": doc.patientId}, function (err, core) {
+                res.json(core);
             });
         } else {
             res.json({result: "no data"});

@@ -57,7 +57,7 @@ router.post('/login', function(req, res, next) {
                 console.log(docs);
                 var token = Verify.getToken(user);
 
-                BC.addVerifyCode({"id":user.username, "verifyCode":token}, function (err, data) {
+                BC.addVerifyCode({"id":user.username, "verifyCode":user.verifyCode}, function (err, data) {
                     console.log("add verify success" + " : " + user.username);
                     console.log(data);
                 });

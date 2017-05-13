@@ -53,6 +53,15 @@ function BCMessageQuery(args){
     return msg;
 }
 
+// 转账消息
+function BCMessageTrans(args){
+    var msg = new BCMessageObj();
+    msg.method = "invoke";
+    msg.params.ctorMsg.function = "transfer";
+    msg.params.ctorMsg.args = args;
+    return msg;
+}
+
 // 在区块链上查询申请记录的信息。
 /**
  *
@@ -153,3 +162,4 @@ exports.BCMessageQuery = BCMessageQuery;
 exports.BCMessageQueryApplicationLog = BCMessageQueryApplicationLog;
 exports.BCMessageVerifyAdd = BCMessageVerifyAdd;
 exports.BCMessageVerify = BCMessageVerify;
+exports.BCMessageTrans = BCMessageTrans;

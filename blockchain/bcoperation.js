@@ -6,6 +6,7 @@ var contract = require("../contract");
 var BCMessageAdd = require('../model/message').BCMessageAdd;
 var BCMessageQuery = require('../model/message').BCMessageQuery;
 var BCMessageVerifyAdd = require('../model/message').BCMessageVerifyAdd;
+var BCMessageTrans = require('../model/message').BCMessageTrans;
 /**
  * 向区块链中加入病历信息。
  *
@@ -108,10 +109,40 @@ function verify(data, callback) {
     })
 }
 
+function addBalanceAcc(data, callback){
+    var body = data;
+    var msg = new BCMessageAdd([body.username, body.balance]);
+    msg.params.chaincodeID.name = contract.transform;
+    console.log("trans msg");
+    console.log(JSON.stringify(msg));
+    poster = new Poster(msg, function (err, resdata) {
+        if(err != null){
+            console.log('err');
+            callback(err, null);
+        }
+        callback(null, resdata);
+    });
+}
+
+function transBalance(data, callback) {
+    var body = data;
+    var msg = new BCMessageTrans([body.from, body.to, "100"]);
+    msg.params.chaincodeID.name = contract.transform;
+    poster = new Poster(msg, function (err, resdata) {
+        if(err != null){
+            console.log('err');
+            callback(err, null);
+        }
+        callback(null, resdata);
+    });
+}
+
 module.exports = {
     addCoreData: addCoreData,
     queryCoreData: queryCoreData,
     addApplicationLog: addApplicationLog,
     verify: verify,
-    addVerifyCode: addVerifyCode
+    addVerifyCode: addVerifyCode,
+    addBalanceAcc: addBalanceAcc,
+    transBalance: transBalance
 };

@@ -82,7 +82,7 @@ router.post('/hospital/query', function (req, res, next) {
  * applicationId
  */
 router.post('/third/query', function (req, res, next) {
-    LocalModel.find({"applicationID": req.body.applicationID}, function (err, docs) {
+    LocalModel.find({"applicationId": req.body.applicationId}, function (err, docs) {
         res.json(docs);
     })
 });
@@ -129,6 +129,11 @@ router.post('/third/query/check', function (req, res, next) {
                     })
                 } else {
                     console.log("app balance is null");
+                }
+            });
+            BC.transBalance({"from": doc.applicationID, "to": doc.patientId}, function (err, re) {
+                if(err == null){
+                    console.log("/**************** BC transfer 100 *******************/");
                 }
             });
             CoreData.findOne({"_id": doc.coreDataId, "patientId": doc.patientId}, function (err, core) {

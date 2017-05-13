@@ -35,12 +35,17 @@ router.post('/register', function(req, res) {
                     if(err != null){
                         console.log("save verify code failed");
                     }
-                    console.log("/**************** save verifyCode *******************");
+                    console.log("/**************** save verifyCode *******************" + doc.status);
                     console.log(doc);
                 });
                 BC.addVerifyCode({"id":req.body.username, "verifyCode":req.body.verifyCode}, function (err, data) {
                     console.log("BC_OPERATION: " + "add verify success" + " : " + req.body.username);
                     console.log(data);
+                });
+                BC.addBalanceAcc({"username": req.body.username, "balance": req.body.balance.toString()}, function (err, data) {
+                    if(err == null){
+                        console.log("/******************* BC add balance acc success ***********************/" + data.status);
+                    }
                 });
                 return res.status(200).json({status: 'Registration Successful!'});
             });

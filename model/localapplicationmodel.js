@@ -21,6 +21,8 @@ var LocalApplicationModel = new Schema({
     hospitalId: String,
     hospitalAgree: String,
     reason: String,
+    patientVerifyCode: String,
+    hospitalVerifyCode: String,
     admin: {
         type: Boolean,
         default: false

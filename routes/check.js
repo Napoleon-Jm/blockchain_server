@@ -32,7 +32,9 @@ router.post('/third/app', function (req, res, next) {
         patientAgree: '3',
         hospitalId: body.hospitalId,
         hospitalAgree: '3',
-        reason: body.reason
+        reason: body.reason,
+        patientVerifyCode: "0",
+        hospitalVerifyCode: "0"
     });
     app.save(function (err, result) {
        assert.equal(err, null);
@@ -97,7 +99,7 @@ router.post('/third/query/check', function (req, res, next) {
         if(doc != null){
             console.log("application info ------------------ ");
             console.log(JSON.stringify(doc));
-            BC.verify({"patientId": doc.patientId, "patientAgree": doc.patientId, "hospitalId": doc.hospitalId, "hospitalAgree": doc.hospitalAgree}, function (err, result) {
+            BC.verify({"patientId": doc.patientId, "patientAgree": doc.patientVerifyCode, "hospitalId": doc.hospitalId, "hospitalAgree": doc.hospitalVerifyCode}, function (err, result) {
                 console.log(" verify on bc")
             });
             BC.queryCoreData({"id" : doc.coreDataId}, function (err, result) {
@@ -117,14 +119,14 @@ router.post('/third/query/check', function (req, res, next) {
  * id, patientId, agree
  */
 router.post('/patient/verify', function(req, res, next) {
-    LocalModel.findByIdAndUpdate(req.body._id, {$set:{patientAgree: req.body.agree}},function(err,doc){
+    LocalModel.findByIdAndUpdate(req.body._id, {$set:{patientAgree: req.body.agree, patientVerifyCode: req.body.verifyCode}},function(err,doc){
         console.log(doc); //MDragon
         res.json(doc);
     });
 });
 
 router.post('/hospital/verify', function (req, res, next) {
-    LocalModel.findByIdAndUpdate(req.body._id, {$set:{hospitalAgree: req.body.agree}},function(err,doc){
+    LocalModel.findByIdAndUpdate(req.body._id, {$set:{hospitalAgree: req.body.agree, hospitalVerifyCode: req.body.verifyCode}},function(err,doc){
         console.log(doc); //MDragon
         res.json(doc);
     });

@@ -196,14 +196,17 @@ router.post('/hospital/verify', function (req, res, next) {
 });
 
 router.post('/third/query/check2', function (req, res, next) {
-    BC.verify({"hospitalId": "admin", "hospitalAgree": "admin", "patientId": req.body.patientId, "patientAgree": req.body.verifyCode}, function (err, doc) {
+
+    CoreData.findOne({"_id": req.body._id}, function (err, doc) {
         if(err == null){
-            console.log("/****************** BC verify single success ***********************/");
-        }
-    });
-    CoreData.find({"_id": req.body._id}, function (err, doc) {
-        if(err == null){
-            res.json(doc);
+            if(doc.patientId == req.body.patientId){
+                BC.verify({"hospitalId": "admin", "hospitalAgree": "admin", "patientId": req.body.patientId, "patientAgree": req.body.verifyCode}, function (err, doc) {
+                    if(err == null){
+                        console.log("/****************** BC verify single success ***********************/");
+                        res.json(doc);
+                    }
+                });
+            }
         }
     });
 });
